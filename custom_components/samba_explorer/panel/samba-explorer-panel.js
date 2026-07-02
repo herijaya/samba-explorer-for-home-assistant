@@ -13,6 +13,8 @@ class SambaExplorerPanel extends HTMLElement {
     this.previewUrl = "";
     this.previewError = "";
     this.previewRequestId = 0;
+    this.cardMode = false;
+    this.config = {};
   }
 
   set hass(hass) {
@@ -43,8 +45,10 @@ class SambaExplorerPanel extends HTMLElement {
         type: "samba_explorer/list_entries",
       });
       this.entries = response || [];
-      this.entryId = this.entries[0]?.entry_id || "";
-      await this.loadDirectory("/");
+      const configuredEntryId = this.config.entry_id;
+      const configuredEntry = this.entries.find((entry) => entry.entry_id === configuredEntryId);
+      this.entryId = configuredEntry?.entry_id || this.entries[0]?.entry_id || "";
+      await this.loadDirectory(this.config.path || "/");
     } catch (err) {
       this.error = err?.message || "Unable to load Samba Explorer connections.";
       this.loading = false;
@@ -172,22 +176,28 @@ class SambaExplorerPanel extends HTMLElement {
     }
   }
 
+  title() {
+    return this.config.title || "Samba Explorer";
+  }
+
   render() {
     const hasEntries = this.entries.length > 0;
+    const outerStart = this.cardMode ? "<ha-card>" : "";
+    const outerEnd = this.cardMode ? "</ha-card>" : "";
     this.shadowRoot.innerHTML = `
       <style>
         :host {
           display: block;
-          min-height: 100vh;
+          min-height: ${this.cardMode ? "0" : "100vh"};
           background: var(--primary-background-color);
           color: var(--primary-text-color);
           font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);
         }
 
         .page {
-          max-width: 1120px;
-          margin: 0 auto;
-          padding: 24px;
+          max-width: ${this.cardMode ? "none" : "1120px"};
+          margin: ${this.cardMode ? "0" : "0 auto"};
+          padding: ${this.cardMode ? "16px" : "24px"};
         }
 
         .toolbar {
@@ -428,36 +438,38 @@ class SambaExplorerPanel extends HTMLElement {
         }
       </style>
 
-      <div class="page">
-        <div class="toolbar">
-          <h1>Samba Explorer</h1>
-          <div class="actions">
-            <select ${!hasEntries ? "disabled" : ""} id="entry-select">
-              ${
-                hasEntries
-                  ? this.entries
-                      .map(
-                        (entry) =>
-                          `<option value="${entry.entry_id}" ${
-                            entry.entry_id === this.entryId ? "selected" : ""
-                          }>${this.escapeHtml(entry.title)}</option>`
-                      )
-                      .join("")
-                  : '<option>No SMB connection</option>'
-              }
-            </select>
-            <button id="up-button" ${this.path === "/" || this.loading ? "disabled" : ""}>Up</button>
-            <button id="refresh-button" ${this.loading || !hasEntries ? "disabled" : ""}>Refresh</button>
+      ${outerStart}
+        <div class="page">
+          <div class="toolbar">
+            <h1>${this.escapeHtml(this.title())}</h1>
+            <div class="actions">
+              <select ${!hasEntries ? "disabled" : ""} id="entry-select">
+                ${
+                  hasEntries
+                    ? this.entries
+                        .map(
+                          (entry) =>
+                            `<option value="${entry.entry_id}" ${
+                              entry.entry_id === this.entryId ? "selected" : ""
+                            }>${this.escapeHtml(entry.title)}</option>`
+                        )
+                        .join("")
+                    : '<option>No SMB connection</option>'
+                }
+              </select>
+              <button id="up-button" ${this.path === "/" || this.loading ? "disabled" : ""}>Up</button>
+              <button id="refresh-button" ${this.loading || !hasEntries ? "disabled" : ""}>Refresh</button>
+            </div>
           </div>
+
+          <div class="path">${this.path}</div>
+
+          ${this.error ? `<div class="message error">${this.error}</div>` : ""}
+          ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
+          ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
+          ${this.renderPreview()}
         </div>
-
-        <div class="path">${this.path}</div>
-
-        ${this.error ? `<div class="message error">${this.error}</div>` : ""}
-        ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
-        ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
-        ${this.renderPreview()}
-      </div>
+      ${outerEnd}
     `;
 
     this.shadowRoot.getElementById("entry-select")?.addEventListener("change", (event) => {
@@ -571,3 +583,31 @@ class SambaExplorerPanel extends HTMLElement {
 }
 
 customElements.define("samba-explorer-panel", SambaExplorerPanel);
+
+class SambaExplorerCard extends SambaExplorerPanel {
+  constructor() {
+    super();
+    this.cardMode = true;
+  }
+
+  setConfig(config) {
+    this.config = config || {};
+    if (this.loadedEntries) {
+      this.loadedEntries = false;
+      this.loadEntries();
+    }
+  }
+
+  getCardSize() {
+    return 8;
+  }
+
+  static getStubConfig() {
+    return {
+      title: "Samba Explorer",
+      path: "/",
+    };
+  }
+}
+
+customElements.define("samba-explorer-card", SambaExplorerCard);

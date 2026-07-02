@@ -13,7 +13,7 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 
 This project is in early development.
 
-Current version: `0.1.5`
+Current version: `0.1.6`
 
 Available now:
 
@@ -23,6 +23,7 @@ Available now:
 - SMB connection test during setup.
 - WebSocket API for listing folders and files.
 - Sidebar panel for browsing configured SMB shares.
+- Lovelace custom card for dashboard-based placement.
 - Newest files are shown first.
 - Basic preview for images, video, audio, PDF, and text files.
 - File download from the preview dialog.
@@ -190,6 +191,37 @@ To update SMB login details later, open the Samba Explorer integration entry fro
 
 HACS support is planned. The repository already includes `hacs.json`, but this integration still needs wider testing before being treated as stable.
 
+## Lovelace Dashboard Card
+
+Samba Explorer can also be placed inside a Lovelace dashboard as a custom card. This is useful when you want to control the display order from your dashboard YAML instead of using the Home Assistant sidebar panel.
+
+Add the frontend resource:
+
+```yaml
+resources:
+  - url: /samba_explorer_static/samba-explorer-panel.js
+    type: module
+```
+
+Then add the card:
+
+```yaml
+type: custom:samba-explorer-card
+title: CCTV Files
+path: /sembako/gudangbaru1
+```
+
+Optional fields:
+
+```yaml
+type: custom:samba-explorer-card
+title: CCTV Files
+entry_id: your_config_entry_id
+path: /sembako/gudangbaru1
+```
+
+If `entry_id` is omitted, the card uses the first configured Samba Explorer connection.
+
 ## Configuration Concept
 
 Example connection data:
@@ -213,6 +245,7 @@ Credential storage should use Home Assistant config entries or secure storage pa
 - [x] Implement SMB connection test.
 - [x] List folders and files from a remote share.
 - [x] Add sidebar panel.
+- [x] Add Lovelace custom card.
 - [x] Add folder navigation.
 - [x] Add basic file preview.
 - [x] Add file download.
