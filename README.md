@@ -6,6 +6,9 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-41BDF5.svg)
 ![SMB](https://img.shields.io/badge/SMB-SMB2%20%7C%20SMB3-green.svg)
 
+[![Open your Home Assistant instance and open this repository inside HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=herijaya&repository=samba-explorer-for-home-assistant&category=integration)
+[![Open your Home Assistant instance and start setting up this integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=samba_explorer)
+
 ## Status
 
 This project is in early development.
@@ -156,6 +159,20 @@ custom_components/
 ```
 
 ## Installation
+
+### HACS Button
+
+After this repository is available in HACS, click this button:
+
+[![Open your Home Assistant instance and open this repository inside HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=herijaya&repository=samba-explorer-for-home-assistant&category=integration)
+
+Then download the integration, restart Home Assistant, and add Samba Explorer from Settings > Devices & services.
+
+After installation, this button starts the setup flow:
+
+[![Open your Home Assistant instance and start setting up this integration.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=samba_explorer)
+
+### Manual
 
 Manual installation:
 
