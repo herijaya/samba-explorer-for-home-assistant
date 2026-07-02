@@ -4,9 +4,9 @@
   "codeowners": ["@herijaya"],
   "config_flow": true,
   "dependencies": ["http", "frontend", "panel_custom"],
-  "documentation": "https://github.com/herijaya/smbclient-homeassisant-",
+  "documentation": "https://github.com/herijaya/samba-explorer-for-home-assistant",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/herijaya/smbclient-homeassisant-/issues",
+  "issue_tracker": "https://github.com/herijaya/samba-explorer-for-home-assistant/issues",
   "requirements": ["pysmb==1.2.10"],
   "version": "0.1.0"
 }
