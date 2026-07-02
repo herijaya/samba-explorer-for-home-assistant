@@ -444,6 +444,14 @@ class SambaExplorerPanel extends HTMLElement {
           gap: 8px;
         }
 
+        .preview-close {
+          width: 38px;
+          min-width: 38px;
+          padding: 0;
+          font-size: 20px;
+          line-height: 1;
+        }
+
         .preview-body {
           min-height: 240px;
           max-height: calc(100vh - 130px);
@@ -583,10 +591,6 @@ class SambaExplorerPanel extends HTMLElement {
       row.addEventListener("click", () => item && this.openPreview(item));
     });
     this.shadowRoot.getElementById("close-preview")?.addEventListener("click", () => this.closePreview());
-    this.shadowRoot.getElementById("download-preview")?.addEventListener("click", async () => {
-      if (!this.previewItem) return;
-      window.open(await this.signedFileUrl(this.previewItem, true), "_blank", "noopener");
-    });
     this.shadowRoot.querySelector(".preview-backdrop")?.addEventListener("click", (event) => {
       if (event.target.classList.contains("preview-backdrop")) this.closePreview();
     });
@@ -659,8 +663,7 @@ class SambaExplorerPanel extends HTMLElement {
           <div class="preview-header">
             <div class="preview-title">${this.escapeHtml(this.previewItem.name)}</div>
             <div class="preview-actions">
-              <button id="download-preview">Download</button>
-              <button id="close-preview">Close</button>
+              <button class="preview-close" id="close-preview" title="Close" aria-label="Close">x</button>
             </div>
           </div>
           <div class="preview-body">
@@ -690,7 +693,7 @@ class SambaExplorerPanel extends HTMLElement {
     return `
       <div class="message">
         <div>This file type cannot be previewed yet.</div>
-        <div class="preview-note">Use Download to open it outside Home Assistant.</div>
+        <div class="preview-note">This file can be opened from the browser context menu if supported.</div>
       </div>
     `;
   }

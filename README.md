@@ -13,7 +13,7 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 
 This project is in early development.
 
-Current version: `0.1.13`
+Current version: `0.1.14`
 
 Available now:
 
