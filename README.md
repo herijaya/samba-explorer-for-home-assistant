@@ -13,7 +13,7 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 
 This project is in early development.
 
-Current version: `0.1.7`
+Current version: `0.1.8`
 
 Available now:
 
@@ -23,6 +23,7 @@ Available now:
 - SMB connection test during setup.
 - WebSocket API for listing folders and files.
 - Sidebar panel for browsing configured SMB shares.
+- Configurable sidebar access: admin-only or all logged-in users.
 - Lovelace custom card for dashboard-based placement.
 - Newest files are shown first.
 - Basic preview for images, video, audio, PDF, and text files.
@@ -188,6 +189,8 @@ Manual installation:
 5. Open Samba Explorer from the Home Assistant sidebar.
 
 To update SMB login details later, open the Samba Explorer integration entry from Settings > Devices & services and choose Configure.
+
+The sidebar panel is admin-only by default. To allow all logged-in Home Assistant users to see it, open Configure and disable Admin only sidebar.
 
 HACS support is planned. The repository already includes `hacs.json`, but this integration still needs wider testing before being treated as stable.
 

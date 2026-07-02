@@ -14,10 +14,12 @@ from .const import (
     CONF_BASE_PATH,
     CONF_DOMAIN,
     CONF_NAME,
+    CONF_PANEL_ADMIN_ONLY,
     CONF_SHARE,
     DEFAULT_BASE_PATH,
     DEFAULT_DOMAIN,
     DEFAULT_NAME,
+    DEFAULT_PANEL_ADMIN_ONLY,
     DOMAIN,
 )
 from .smb_client import DEFAULT_SMB_PORT, SambaExplorerClient, SmbEntryConfig
@@ -35,6 +37,10 @@ def _schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
             vol.Optional(CONF_DOMAIN, default=defaults.get(CONF_DOMAIN, DEFAULT_DOMAIN)): str,
             vol.Optional(CONF_BASE_PATH, default=defaults.get(CONF_BASE_PATH, DEFAULT_BASE_PATH)): str,
             vol.Optional(CONF_PORT, default=defaults.get(CONF_PORT, DEFAULT_SMB_PORT)): int,
+            vol.Optional(
+                CONF_PANEL_ADMIN_ONLY,
+                default=defaults.get(CONF_PANEL_ADMIN_ONLY, DEFAULT_PANEL_ADMIN_ONLY),
+            ): bool,
         }
     )
 

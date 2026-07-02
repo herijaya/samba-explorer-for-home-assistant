@@ -4,13 +4,20 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from homeassistant.components import panel_custom
+from homeassistant.components import frontend, panel_custom
 from homeassistant.components.http import StaticPathConfig
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
 
-from .const import DOMAIN, PANEL_ICON, PANEL_TITLE, PANEL_URL
+from .const import (
+    CONF_PANEL_ADMIN_ONLY,
+    DEFAULT_PANEL_ADMIN_ONLY,
+    DOMAIN,
+    PANEL_ICON,
+    PANEL_TITLE,
+    PANEL_URL,
+)
 from .http import SambaExplorerFileView
 from .websocket_api import async_register_websocket_api
 
@@ -40,13 +47,21 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def _async_register_panel(hass: HomeAssistant) -> None:
-    if DOMAIN in hass.data and hass.data[DOMAIN].get("panel_registered"):
+    data = hass.data.setdefault(DOMAIN, {})
+    require_admin = _panel_require_admin(hass)
+
+    if data.get("panel_registered") and data.get("panel_require_admin") == require_admin:
         return
 
-    panel_path = Path(__file__).parent / "panel"
-    await hass.http.async_register_static_paths(
-        [StaticPathConfig(PANEL_STATIC_URL, str(panel_path), cache_headers=False)]
-    )
+    if not data.get("static_registered"):
+        panel_path = Path(__file__).parent / "panel"
+        await hass.http.async_register_static_paths(
+            [StaticPathConfig(PANEL_STATIC_URL, str(panel_path), cache_headers=False)]
+        )
+        data["static_registered"] = True
+
+    if data.get("panel_registered"):
+        frontend.async_remove_panel(hass, PANEL_URL.strip("/"), warn_if_unknown=False)
 
     await panel_custom.async_register_panel(
         hass,
@@ -56,6 +71,19 @@ async def _async_register_panel(hass: HomeAssistant) -> None:
         sidebar_icon=PANEL_ICON,
         module_url=PANEL_JS,
         embed_iframe=False,
-        require_admin=True,
+        require_admin=require_admin,
     )
-    hass.data.setdefault(DOMAIN, {})["panel_registered"] = True
+    data["panel_registered"] = True
+    data["panel_require_admin"] = require_admin
+
+
+def _panel_require_admin(hass: HomeAssistant) -> bool:
+    """Return whether the sidebar panel should require admin access."""
+    entries = hass.config_entries.async_entries(DOMAIN)
+    if not entries:
+        return DEFAULT_PANEL_ADMIN_ONLY
+
+    return all(
+        entry.data.get(CONF_PANEL_ADMIN_ONLY, DEFAULT_PANEL_ADMIN_ONLY)
+        for entry in entries
+    )

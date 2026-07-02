@@ -12,12 +12,13 @@
           "password": "Password",
           "domain": "Domain or workgroup",
           "base_path": "Base path",
-          "port": "Port"
+          "port": "Port",
+          "panel_admin_only": "Admin only sidebar"
         }
       },
       "init": {
         "title": "Configure Samba Explorer",
-        "description": "Update the SMB/Samba login details for this connection.",
+        "description": "Update the SMB/Samba login details and sidebar access for this connection.",
         "data": {
           "name": "Name",
           "host": "Server address",
@@ -26,7 +27,8 @@
           "password": "Password",
           "domain": "Domain or workgroup",
           "base_path": "Base path",
-          "port": "Port"
+          "port": "Port",
+          "panel_admin_only": "Admin only sidebar"
         }
       }
     },
