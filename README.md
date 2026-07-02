@@ -19,6 +19,7 @@ Available now:
 
 - Home Assistant custom integration skeleton.
 - Config flow for adding an SMB/Samba share.
+- Options flow for updating SMB login details on an existing entry.
 - SMB connection test during setup.
 - WebSocket API for listing folders and files.
 - Sidebar panel for browsing configured SMB shares.
@@ -182,6 +183,8 @@ Manual installation:
 4. Configure SMB server address, share name, username, password, and base path.
 5. Open Samba Explorer from the Home Assistant sidebar.
 
+To update SMB login details later, open the Samba Explorer integration entry from Settings > Devices & services and choose Configure.
+
 HACS support is planned. The repository already includes `hacs.json`, but this integration still needs wider testing before being treated as stable.
 
 ## Configuration Concept
@@ -203,6 +206,7 @@ Credential storage should use Home Assistant config entries or secure storage pa
 
 - [x] Create Home Assistant custom integration skeleton.
 - [x] Add config flow for SMB server setup.
+- [x] Add configure flow for updating SMB login details.
 - [x] Implement SMB connection test.
 - [x] List folders and files from a remote share.
 - [x] Add sidebar panel.

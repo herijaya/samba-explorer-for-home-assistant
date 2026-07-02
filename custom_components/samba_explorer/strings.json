@@ -14,6 +14,20 @@
           "base_path": "Base path",
           "port": "Port"
         }
+      },
+      "init": {
+        "title": "Configure Samba Explorer",
+        "description": "Update the SMB/Samba login details for this connection.",
+        "data": {
+          "name": "Name",
+          "host": "Server address",
+          "share": "Share name",
+          "username": "Username",
+          "password": "Password",
+          "domain": "Domain or workgroup",
+          "base_path": "Base path",
+          "port": "Port"
+        }
       }
     },
     "error": {
@@ -24,4 +38,3 @@
     }
   }
 }
-

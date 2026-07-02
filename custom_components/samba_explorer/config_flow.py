@@ -45,10 +45,19 @@ async def _validate_input(hass: HomeAssistant, data: dict[str, Any]) -> None:
     await hass.async_add_executor_job(client.test_connection)
 
 
+def _entry_title(data: dict[str, Any]) -> str:
+    return data.get(CONF_NAME) or f"{data[CONF_HOST]}/{data[CONF_SHARE]}"
+
+
 class SambaExplorerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle Samba Explorer setup."""
 
     VERSION = 1
+
+    @staticmethod
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> config_entries.OptionsFlow:
+        """Create the options flow for an existing entry."""
+        return SambaExplorerOptionsFlow(config_entry)
 
     async def async_step_user(self, user_input: dict[str, Any] | None = None):
         errors: dict[str, str] = {}
@@ -64,7 +73,7 @@ class SambaExplorerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             except Exception:
                 errors["base"] = "cannot_connect"
             else:
-                return self.async_create_entry(title=user_input[CONF_NAME], data=user_input)
+                return self.async_create_entry(title=_entry_title(user_input), data=user_input)
 
         return self.async_show_form(
             step_id="user",
@@ -72,3 +81,36 @@ class SambaExplorerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
+
+class SambaExplorerOptionsFlow(config_entries.OptionsFlow):
+    """Handle Samba Explorer reconfiguration."""
+
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+        self.config_entry = config_entry
+
+    async def async_step_init(self, user_input: dict[str, Any] | None = None):
+        """Show the SMB connection form again for an existing entry."""
+        errors: dict[str, str] = {}
+        defaults = dict(self.config_entry.data)
+
+        if user_input is not None:
+            updated_data = {**defaults, **user_input}
+
+            try:
+                await _validate_input(self.hass, updated_data)
+            except Exception:
+                errors["base"] = "cannot_connect"
+            else:
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry,
+                    title=_entry_title(updated_data),
+                    data=updated_data,
+                )
+                await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+                return self.async_create_entry(title="", data={})
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=_schema(user_input or defaults),
+            errors=errors,
+        )
