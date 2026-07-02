@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="title desc">
+  <title id="title">Samba Explorer file browser</title>
+  <desc id="desc">Dark Samba Explorer file browser showing latest videos first and pagination controls.</desc>
+  <rect width="1280" height="720" fill="#101010"/>
+  <g font-family="Arial, sans-serif">
+    <text x="32" y="38" fill="#f7f7f7" font-size="28" font-weight="700">Samba Explorer</text>
+    <rect x="682" y="10" width="410" height="40" rx="8" fill="#191919" stroke="#353535"/>
+    <text x="704" y="36" fill="#ffffff" font-size="15" font-weight="700">cctv</text>
+    <rect x="1104" y="10" width="52" height="40" rx="8" fill="#191919" stroke="#353535"/>
+    <text x="1120" y="36" fill="#ffffff" font-size="15" font-weight="700">Up</text>
+    <rect x="1164" y="10" width="82" height="40" rx="8" fill="#191919" stroke="#353535"/>
+    <text x="1184" y="36" fill="#ffffff" font-size="15" font-weight="700">Reload</text>
+    <rect x="32" y="64" width="1214" height="46" rx="8" fill="#171717" stroke="#333333"/>
+    <text x="52" y="94" fill="#b6c0c8" font-size="14" font-family="monospace">/sembako/gudangbaru1</text>
+    <text x="32" y="152" fill="#b6c0c8" font-size="15">Showing 1-50 of 4811</text>
+    <rect x="1110" y="126" width="64" height="42" rx="8" fill="#171717" stroke="#292929"/>
+    <text x="1128" y="153" fill="#777" font-size="14" font-weight="700">Prev</text>
+    <rect x="1184" y="126" width="64" height="42" rx="8" fill="#1d1d1d" stroke="#333"/>
+    <text x="1204" y="153" fill="#fff" font-size="14" font-weight="700">Next</text>
+    <rect x="32" y="182" width="1214" height="504" rx="8" fill="#191919" stroke="#343434"/>
+    <rect x="32" y="182" width="1214" height="42" rx="8" fill="#1b1b1b"/>
+    <text x="50" y="209" fill="#aab4bd" font-size="13" font-weight="700">NAME</text>
+    <text x="734" y="209" fill="#aab4bd" font-size="13" font-weight="700">MODIFIED</text>
+    <text x="1080" y="209" fill="#aab4bd" font-size="13" font-weight="700">SIZE</text>
+    <g font-size="16">
+      <g transform="translate(0 230)">
+        <rect x="50" y="0" width="52" height="26" rx="13" fill="#0d3038"/><text x="60" y="18" fill="#b6c0c8" font-size="11" font-weight="700">VIDEO</text><text x="115" y="19" fill="#fff">gudangbaru1_2026-07-02_15-36-04.mkv</text><text x="734" y="19" fill="#fff">7/2/2026, 3:36:39 PM</text><text x="1080" y="19" fill="#fff">8.0 MB</text>
+      </g>
+      <g transform="translate(0 282)">
+        <rect x="50" y="0" width="52" height="26" rx="13" fill="#0d3038"/><text x="60" y="18" fill="#b6c0c8" font-size="11" font-weight="700">VIDEO</text><text x="115" y="19" fill="#fff">gudangbaru1_2026-07-02_15-21-02.mkv</text><text x="734" y="19" fill="#fff">7/2/2026, 3:36:04 PM</text><text x="1080" y="19" fill="#fff">213.9 MB</text>
+      </g>
+      <g transform="translate(0 334)">
+        <rect x="50" y="0" width="52" height="26" rx="13" fill="#0d3038"/><text x="60" y="18" fill="#b6c0c8" font-size="11" font-weight="700">VIDEO</text><text x="115" y="19" fill="#fff">gudangbaru1_2026-07-02_15-06-04.mkv</text><text x="734" y="19" fill="#fff">7/2/2026, 3:21:02 PM</text><text x="1080" y="19" fill="#fff">213.2 MB</text>
+      </g>
+      <g transform="translate(0 386)">
+        <rect x="50" y="0" width="52" height="26" rx="13" fill="#0d3038"/><text x="60" y="18" fill="#b6c0c8" font-size="11" font-weight="700">VIDEO</text><text x="115" y="19" fill="#fff">gudangbaru1_2026-07-02_14-51-02.mkv</text><text x="734" y="19" fill="#fff">7/2/2026, 3:06:04 PM</text><text x="1080" y="19" fill="#fff">213.9 MB</text>
+      </g>
+      <g transform="translate(0 438)">
+        <rect x="50" y="0" width="52" height="26" rx="13" fill="#0d3038"/><text x="60" y="18" fill="#b6c0c8" font-size="11" font-weight="700">VIDEO</text><text x="115" y="19" fill="#fff">gudangbaru1_2026-07-02_14-36-03.mkv</text><text x="734" y="19" fill="#fff">7/2/2026, 2:51:02 PM</text><text x="1080" y="19" fill="#fff">213.2 MB</text>
+      </g>
+    </g>
+    <line x1="32" y1="276" x2="1246" y2="276" stroke="#2c2c2c"/>
+    <line x1="32" y1="328" x2="1246" y2="328" stroke="#2c2c2c"/>
+    <line x1="32" y1="380" x2="1246" y2="380" stroke="#2c2c2c"/>
+    <line x1="32" y1="432" x2="1246" y2="432" stroke="#2c2c2c"/>
+    <line x1="32" y1="484" x2="1246" y2="484" stroke="#2c2c2c"/>
+  </g>
+</svg>

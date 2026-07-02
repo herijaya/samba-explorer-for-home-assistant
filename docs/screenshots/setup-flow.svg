@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1040" viewBox="0 0 720 1040" role="img" aria-labelledby="title desc">
+  <title id="title">Samba Explorer setup flow</title>
+  <desc id="desc">Dark Home Assistant setup dialog for configuring an SMB connection.</desc>
+  <rect width="720" height="1040" fill="#0f0f0f"/>
+  <rect x="22" y="18" width="676" height="1000" rx="24" fill="#1b1b1b"/>
+  <text x="82" y="58" fill="#f4f4f4" font-family="Arial, sans-serif" font-size="24" font-weight="700">Samba Explorer</text>
+  <text x="45" y="58" fill="#f4f4f4" font-family="Arial, sans-serif" font-size="30">x</text>
+  <text x="48" y="126" fill="#e8e8e8" font-family="Arial, sans-serif" font-size="16">Connect Home Assistant to an SMB/Samba share.</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="48" y="162" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="190" fill="#bcbcbc" font-size="12">Name*</text>
+    <text x="66" y="210" fill="#ffffff" font-size="16">Samba Explorer</text>
+    <line x1="48" y1="226" x2="672" y2="226" stroke="#cfcfcf"/>
+    <rect x="48" y="264" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="302" fill="#a7a7a7" font-size="16">Server address*</text>
+    <line x1="48" y1="328" x2="672" y2="328" stroke="#cfcfcf"/>
+    <rect x="48" y="366" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="404" fill="#a7a7a7" font-size="16">Share name*</text>
+    <line x1="48" y1="430" x2="672" y2="430" stroke="#cfcfcf"/>
+    <rect x="48" y="468" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="506" fill="#a7a7a7" font-size="16">Username*</text>
+    <line x1="48" y1="532" x2="672" y2="532" stroke="#cfcfcf"/>
+    <rect x="48" y="570" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="608" fill="#a7a7a7" font-size="16">Password*</text>
+    <text x="620" y="610" fill="#bbbbbb" font-size="18">eye</text>
+    <line x1="48" y1="634" x2="672" y2="634" stroke="#cfcfcf"/>
+    <rect x="48" y="672" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="700" fill="#bcbcbc" font-size="12">Domain or workgroup</text>
+    <text x="66" y="720" fill="#ffffff" font-size="16">WORKGROUP</text>
+    <line x1="48" y1="736" x2="672" y2="736" stroke="#cfcfcf"/>
+    <rect x="48" y="774" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="802" fill="#bcbcbc" font-size="12">Base path</text>
+    <text x="66" y="822" fill="#ffffff" font-size="16">/</text>
+    <line x1="48" y1="838" x2="672" y2="838" stroke="#cfcfcf"/>
+    <rect x="48" y="876" width="624" height="64" rx="4" fill="#343434"/>
+    <text x="66" y="904" fill="#bcbcbc" font-size="12">Port</text>
+    <text x="66" y="924" fill="#ffffff" font-size="16">445</text>
+    <line x1="48" y1="940" x2="672" y2="940" stroke="#cfcfcf"/>
+    <rect x="48" y="978" width="24" height="24" rx="4" fill="#03a9d9"/>
+    <path d="M54 990l5 5 8-11" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="84" y="996" fill="#ffffff" font-size="16">Admin only sidebar</text>
+    <rect x="576" y="970" width="96" height="48" rx="24" fill="#03a9d9"/>
+    <text x="604" y="1001" fill="#fff" font-size="15" font-weight="700">Submit</text>
+  </g>
+</svg>
+

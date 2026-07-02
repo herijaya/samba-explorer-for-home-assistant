@@ -13,7 +13,7 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 
 This project is in early development.
 
-Current version: `0.1.11`
+Current version: `0.1.12`
 
 Available now:
 
@@ -285,7 +285,13 @@ Planned support:
 
 ## Screenshots
 
-Screenshots will be added after the first working UI is available.
+### Setup Flow
+
+![Samba Explorer setup flow](docs/screenshots/setup-flow.svg)
+
+### File Browser
+
+![Samba Explorer file browser with pagination](docs/screenshots/file-browser.svg)
 
 ## Development
 

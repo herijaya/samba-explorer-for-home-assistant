@@ -556,8 +556,9 @@ class SambaExplorerPanel extends HTMLElement {
 
           ${this.error ? `<div class="message error">${this.error}</div>` : ""}
           ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
-          ${this.renderPager()}
+          ${this.renderPager("top")}
           ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
+          ${this.renderPager("bottom")}
           ${this.renderPreview()}
         </div>
       ${outerEnd}
@@ -569,8 +570,12 @@ class SambaExplorerPanel extends HTMLElement {
     });
     this.shadowRoot.getElementById("up-button")?.addEventListener("click", () => this.loadDirectory(this.parentPath()));
     this.shadowRoot.getElementById("refresh-button")?.addEventListener("click", () => this.loadDirectory(this.path));
-    this.shadowRoot.getElementById("prev-page")?.addEventListener("click", () => this.setPage(this.page - 1));
-    this.shadowRoot.getElementById("next-page")?.addEventListener("click", () => this.setPage(this.page + 1));
+    this.shadowRoot.querySelectorAll("[data-page-action='prev']").forEach((button) => {
+      button.addEventListener("click", () => this.setPage(this.page - 1));
+    });
+    this.shadowRoot.querySelectorAll("[data-page-action='next']").forEach((button) => {
+      button.addEventListener("click", () => this.setPage(this.page + 1));
+    });
     this.shadowRoot.querySelectorAll("tr.folder").forEach((row) => {
       row.addEventListener("click", () => this.loadDirectory(row.dataset.path));
     });
@@ -628,17 +633,17 @@ class SambaExplorerPanel extends HTMLElement {
     `;
   }
 
-  renderPager() {
+  renderPager(position) {
     if (this.loading || this.items.length <= this.pageSize) return "";
 
     const start = this.page * this.pageSize + 1;
     const end = Math.min((this.page + 1) * this.pageSize, this.items.length);
     return `
-      <div class="pager">
+      <div class="pager pager-${position}">
         <div>Showing ${start}-${end} of ${this.items.length}</div>
         <div class="pager-actions">
-          <button id="prev-page" ${this.page === 0 ? "disabled" : ""}>Prev</button>
-          <button id="next-page" ${this.page >= this.totalPages() - 1 ? "disabled" : ""}>Next</button>
+          <button data-page-action="prev" ${this.page === 0 ? "disabled" : ""}>Prev</button>
+          <button data-page-action="next" ${this.page >= this.totalPages() - 1 ? "disabled" : ""}>Next</button>
         </div>
       </div>
     `;
