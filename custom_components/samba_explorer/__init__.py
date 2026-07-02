@@ -18,12 +18,13 @@ from .const import (
     PANEL_ICON,
     PANEL_TITLE,
     PANEL_URL,
+    VERSION,
 )
 from .http import SambaExplorerFileView
 from .websocket_api import async_register_websocket_api
 
 PANEL_STATIC_URL = "/samba_explorer_static"
-PANEL_JS = f"{PANEL_STATIC_URL}/samba-explorer-panel.js"
+PANEL_JS = f"{PANEL_STATIC_URL}/samba-explorer-panel.js?v={VERSION}"
 
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:

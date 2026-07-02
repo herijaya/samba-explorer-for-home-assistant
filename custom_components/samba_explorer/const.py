@@ -12,6 +12,7 @@ DEFAULT_BASE_PATH = "/"
 DEFAULT_DOMAIN = "WORKGROUP"
 DEFAULT_NAME = "Samba Explorer"
 DEFAULT_PANEL_ADMIN_ONLY = True
+VERSION = "0.1.16"
 
 PANEL_URL = "/samba-explorer"
 PANEL_ICON = "mdi:folder-network"
