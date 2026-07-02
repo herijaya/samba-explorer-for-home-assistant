@@ -91,6 +91,32 @@ class SambaExplorerClient:
         finally:
             conn.close()
 
+    def get_file_size(self, path: str) -> int:
+        """Return the size of a file in bytes."""
+        conn = self._connect()
+        try:
+            normalized_path = self._safe_path(path)
+            return conn.getAttributes(self._config.share, normalized_path).file_size
+        finally:
+            conn.close()
+
+    def read_file_range(self, path: str, offset: int, length: int) -> bytes:
+        """Read a byte range from a file."""
+        conn = self._connect()
+        try:
+            normalized_path = self._safe_path(path)
+            output = BytesIO()
+            conn.retrieveFileFromOffset(
+                self._config.share,
+                normalized_path,
+                output,
+                offset=offset,
+                max_length=length,
+            )
+            return output.getvalue()
+        finally:
+            conn.close()
+
     def _connect(self) -> SMBConnection:
         conn = SMBConnection(
             self._config.username,

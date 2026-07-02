@@ -25,11 +25,11 @@ Available now:
 - Sidebar panel for browsing configured SMB shares.
 - Basic preview for images, video, audio, PDF, and text files.
 - File download from the preview dialog.
+- Range-based video/audio preview to avoid loading large files all at once.
 
 Planned next:
 
 - Upload, rename, delete, copy, and move operations.
-- Range-based streaming for large video files.
 - Search.
 - Favorites.
 - Multi-server UX improvements.

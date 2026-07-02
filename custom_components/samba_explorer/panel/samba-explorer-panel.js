@@ -12,6 +12,7 @@ class SambaExplorerPanel extends HTMLElement {
     this.previewItem = null;
     this.previewUrl = "";
     this.previewError = "";
+    this.previewRequestId = 0;
   }
 
   set hass(hass) {
@@ -24,6 +25,10 @@ class SambaExplorerPanel extends HTMLElement {
 
   connectedCallback() {
     this.render();
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener("keydown", this.boundKeydown);
   }
 
   async loadEntries() {
@@ -131,24 +136,40 @@ class SambaExplorerPanel extends HTMLElement {
   async openPreview(item) {
     if (item.is_dir) return;
 
+    const requestId = this.previewRequestId + 1;
+    this.previewRequestId = requestId;
     this.previewItem = item;
     this.previewUrl = "";
     this.previewError = "";
     this.render();
 
     try {
-      this.previewUrl = await this.signedFileUrl(item);
+      const previewUrl = await this.signedFileUrl(item);
+      if (this.previewRequestId !== requestId || !this.previewItem) return;
+      this.previewUrl = previewUrl;
     } catch (err) {
+      if (this.previewRequestId !== requestId || !this.previewItem) return;
       this.previewError = err?.message || "Unable to open this file.";
     }
     this.render();
   }
 
   closePreview() {
+    this.previewRequestId += 1;
+    this.shadowRoot.querySelectorAll("video, audio, iframe, img").forEach((element) => {
+      element.removeAttribute("src");
+      if (typeof element.load === "function") element.load();
+    });
     this.previewItem = null;
     this.previewUrl = "";
     this.previewError = "";
     this.render();
+  }
+
+  handleKeydown(event) {
+    if (event.key === "Escape" && this.previewItem) {
+      this.closePreview();
+    }
   }
 
   render() {
@@ -457,6 +478,13 @@ class SambaExplorerPanel extends HTMLElement {
       if (!this.previewItem) return;
       window.open(await this.signedFileUrl(this.previewItem, true), "_blank", "noopener");
     });
+    this.shadowRoot.querySelector(".preview-backdrop")?.addEventListener("click", (event) => {
+      if (event.target.classList.contains("preview-backdrop")) this.closePreview();
+    });
+    if (!this.boundKeydown) {
+      this.boundKeydown = (event) => this.handleKeydown(event);
+      window.addEventListener("keydown", this.boundKeydown);
+    }
   }
 
   renderTable() {
@@ -524,7 +552,7 @@ class SambaExplorerPanel extends HTMLElement {
       return `<img src="${this.previewUrl}" alt="${this.escapeHtml(this.previewItem.name)}">`;
     }
     if (kind === "video") {
-      return `<video src="${this.previewUrl}" controls autoplay playsinline></video>`;
+      return `<video src="${this.previewUrl}" controls autoplay playsinline preload="metadata"></video>`;
     }
     if (kind === "audio") {
       return `<audio src="${this.previewUrl}" controls autoplay></audio>`;
