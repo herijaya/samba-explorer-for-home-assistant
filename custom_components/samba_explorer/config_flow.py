@@ -112,12 +112,12 @@ class SambaExplorerOptionsFlow(config_entries.OptionsFlow):
     """Handle Samba Explorer reconfiguration."""
 
     def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
-        self.config_entry = config_entry
+        self._config_entry = config_entry
 
     async def async_step_init(self, user_input: dict[str, Any] | None = None):
         """Show the SMB connection form again for an existing entry."""
         errors: dict[str, str] = {}
-        defaults = dict(self.config_entry.data)
+        defaults = dict(self._config_entry.data)
 
         if user_input is not None:
             updated_data = {**defaults, **user_input}
@@ -130,7 +130,7 @@ class SambaExplorerOptionsFlow(config_entries.OptionsFlow):
                 errors["base"] = "cannot_connect"
             else:
                 self.hass.config_entries.async_update_entry(
-                    self.config_entry,
+                    self._config_entry,
                     title=_entry_title(updated_data),
                     data=updated_data,
                 )
