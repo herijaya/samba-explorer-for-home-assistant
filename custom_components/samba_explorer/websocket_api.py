@@ -5,9 +5,10 @@ from __future__ import annotations
 import voluptuous as vol
 
 from homeassistant.components import websocket_api
+from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant, callback
 
-from .const import DOMAIN, CONF_HOST, CONF_SHARE, WS_LIST_DIRECTORY, WS_LIST_ENTRIES
+from .const import DOMAIN, CONF_SHARE, WS_LIST_DIRECTORY, WS_LIST_ENTRIES
 from .smb_client import SambaExplorerClient, SmbEntryConfig
 
 
