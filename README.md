@@ -8,9 +8,25 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 
 ## Status
 
-This project is currently in the planning and early development stage.
+This project is in early development.
 
-The goal is to build a Home Assistant custom integration that adds a sidebar file manager for remote SMB/Samba servers. Home Assistant can mount network storage for specific use cases, but it does not provide a complete browser-style interface for managing files on remote shares.
+Current version: `0.1.0`
+
+Available now:
+
+- Home Assistant custom integration skeleton.
+- Config flow for adding an SMB/Samba share.
+- SMB connection test during setup.
+- WebSocket API for listing folders and files.
+- Sidebar panel for browsing configured SMB shares.
+
+Planned next:
+
+- Download, upload, rename, delete, copy, and move operations.
+- File preview.
+- Search.
+- Favorites.
+- Multi-server UX improvements.
 
 ## Main Idea
 
@@ -22,7 +38,7 @@ Samba Explorer makes SMB shares feel like part of Home Assistant:
 - Search files across selected folders.
 - Save favorite SMB locations for quick access.
 
-## Planned Features
+## Features
 
 ### File Browser
 
@@ -34,13 +50,13 @@ Samba Explorer makes SMB shares feel like part of Home Assistant:
 
 ### File Operations
 
-- Download files.
-- Upload files.
-- Rename files and folders.
-- Delete files and folders.
-- Copy files.
-- Move files.
-- Create folders.
+- Download files. Planned.
+- Upload files. Planned.
+- Rename files and folders. Planned.
+- Delete files and folders. Planned.
+- Copy files. Planned.
+- Move files. Planned.
+- Create folders. Planned.
 
 ### Preview
 
@@ -52,10 +68,10 @@ Samba Explorer makes SMB shares feel like part of Home Assistant:
 
 ### Search
 
-- Search inside the active share.
-- Recursive folder search.
-- Filter by extension.
-- Filter by file type.
+- Search inside the active share. Planned.
+- Recursive folder search. Planned.
+- Filter by extension. Planned.
+- Filter by file type. Planned.
 
 ### Favorites
 
@@ -130,24 +146,26 @@ custom_components/
     manifest.json
     config_flow.py
     const.py
-    services.yaml
     smb_client.py
     websocket_api.py
+    strings.json
+    translations/
+      en.json
     panel/
       samba-explorer-panel.js
 ```
 
 ## Installation
 
-Installation is not available yet because the integration has not been implemented.
-
-Planned installation flow:
+Manual installation:
 
 1. Copy `custom_components/samba_explorer` into the Home Assistant `custom_components` folder.
 2. Restart Home Assistant.
 3. Add Samba Explorer from Settings > Devices & services.
 4. Configure SMB server address, share name, username, password, and base path.
 5. Open Samba Explorer from the Home Assistant sidebar.
+
+HACS support is planned. The repository already includes `hacs.json`, but this integration still needs wider testing before being treated as stable.
 
 ## Configuration Concept
 
@@ -166,12 +184,12 @@ Credential storage should use Home Assistant config entries or secure storage pa
 
 ## Roadmap
 
-- [ ] Create Home Assistant custom integration skeleton.
-- [ ] Add config flow for SMB server setup.
-- [ ] Implement SMB connection test.
-- [ ] List folders and files from a remote share.
-- [ ] Add sidebar panel.
-- [ ] Add folder navigation.
+- [x] Create Home Assistant custom integration skeleton.
+- [x] Add config flow for SMB server setup.
+- [x] Implement SMB connection test.
+- [x] List folders and files from a remote share.
+- [x] Add sidebar panel.
+- [x] Add folder navigation.
 - [ ] Add file download.
 - [ ] Add upload support.
 - [ ] Add rename, delete, copy, move, and create folder operations.
@@ -207,6 +225,20 @@ Planned support:
 ## Screenshots
 
 Screenshots will be added after the first working UI is available.
+
+## Development
+
+Basic syntax check:
+
+```bash
+python -m py_compile custom_components/samba_explorer/*.py
+```
+
+Package contents:
+
+```text
+custom_components/samba_explorer
+```
 
 ## Contributing
 

@@ -1,0 +1,27 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Samba Explorer",
+        "description": "Connect Home Assistant to an SMB/Samba share.",
+        "data": {
+          "name": "Name",
+          "host": "Server address",
+          "share": "Share name",
+          "username": "Username",
+          "password": "Password",
+          "domain": "Domain or workgroup",
+          "base_path": "Base path",
+          "port": "Port"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not connect to the SMB server. Check the address, share name, username, password, and port."
+    },
+    "abort": {
+      "already_configured": "This SMB share is already configured."
+    }
+  }
+}
+
