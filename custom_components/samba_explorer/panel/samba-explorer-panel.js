@@ -192,12 +192,21 @@ class SambaExplorerPanel extends HTMLElement {
           background: var(--primary-background-color);
           color: var(--primary-text-color);
           font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);
+          --se-surface: var(--card-background-color);
+          --se-border: color-mix(in srgb, var(--divider-color), transparent 18%);
+          --se-hover: color-mix(in srgb, var(--primary-color) 10%, transparent);
+          --se-muted: var(--secondary-text-color);
+        }
+
+        ha-card {
+          overflow: hidden;
+          border-radius: var(--ha-card-border-radius, 8px);
         }
 
         .page {
           max-width: ${this.cardMode ? "none" : "1120px"};
           margin: ${this.cardMode ? "0" : "0 auto"};
-          padding: ${this.cardMode ? "16px" : "24px"};
+          padding: ${this.cardMode ? "16px" : "28px"};
         }
 
         .toolbar {
@@ -205,34 +214,56 @@ class SambaExplorerPanel extends HTMLElement {
           align-items: center;
           justify-content: space-between;
           gap: 16px;
-          margin-bottom: 16px;
+          margin-bottom: 14px;
         }
 
         h1 {
           margin: 0;
-          font-size: 24px;
-          font-weight: 500;
+          font-size: ${this.cardMode ? "20px" : "26px"};
+          font-weight: 650;
+          line-height: 1.15;
+          letter-spacing: 0;
         }
 
         .actions {
           display: flex;
           align-items: center;
           gap: 8px;
+          min-width: min(100%, 520px);
         }
 
         select,
         button {
-          min-height: 40px;
-          border: 1px solid var(--divider-color);
-          border-radius: 6px;
-          background: var(--card-background-color);
+          min-height: 38px;
+          border: 1px solid var(--se-border);
+          border-radius: 8px;
+          background: var(--se-surface);
           color: var(--primary-text-color);
-          padding: 0 12px;
+          padding: 0 14px;
           font: inherit;
+          transition: border-color 140ms ease, background 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+        }
+
+        select {
+          flex: 1 1 260px;
+          min-width: 180px;
+          appearance: auto;
         }
 
         button {
           cursor: pointer;
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        button:hover:not(:disabled),
+        select:hover:not(:disabled) {
+          border-color: color-mix(in srgb, var(--primary-color) 45%, var(--se-border));
+          background: color-mix(in srgb, var(--primary-color) 6%, var(--se-surface));
+        }
+
+        button:active:not(:disabled) {
+          transform: translateY(1px);
         }
 
         button:disabled {
@@ -244,20 +275,22 @@ class SambaExplorerPanel extends HTMLElement {
           display: flex;
           align-items: center;
           min-height: 40px;
-          margin-bottom: 12px;
-          padding: 0 12px;
-          border: 1px solid var(--divider-color);
-          border-radius: 6px;
-          background: var(--card-background-color);
+          margin-bottom: 14px;
+          padding: 0 14px;
+          border: 1px solid var(--se-border);
+          border-radius: 8px;
+          background: color-mix(in srgb, var(--se-surface) 88%, var(--primary-background-color));
+          color: var(--se-muted);
           font-family: monospace;
+          font-size: 13px;
           overflow-wrap: anywhere;
         }
 
         .message {
           padding: 16px;
-          border: 1px solid var(--divider-color);
-          border-radius: 6px;
-          background: var(--card-background-color);
+          border: 1px solid var(--se-border);
+          border-radius: 8px;
+          background: var(--se-surface);
         }
 
         .error {
@@ -267,24 +300,32 @@ class SambaExplorerPanel extends HTMLElement {
 
         table {
           width: 100%;
-          border-collapse: collapse;
-          background: var(--card-background-color);
-          border: 1px solid var(--divider-color);
-          border-radius: 6px;
+          border-collapse: separate;
+          border-spacing: 0;
+          background: var(--se-surface);
+          border: 1px solid var(--se-border);
+          border-radius: 8px;
           overflow: hidden;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
         }
 
         th,
         td {
-          padding: 12px;
-          border-bottom: 1px solid var(--divider-color);
+          padding: 11px 14px;
+          border-bottom: 1px solid var(--se-border);
           text-align: left;
           font-size: 14px;
         }
 
         th {
-          font-weight: 500;
-          color: var(--secondary-text-color);
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background: color-mix(in srgb, var(--se-surface) 92%, var(--primary-background-color));
+          font-size: 12px;
+          font-weight: 700;
+          color: var(--se-muted);
+          text-transform: uppercase;
         }
 
         tr:last-child td {
@@ -295,30 +336,35 @@ class SambaExplorerPanel extends HTMLElement {
           cursor: pointer;
         }
 
-        tr.folder:hover {
-          background: rgba(3, 169, 244, 0.08);
+        tr.folder:hover,
+        tr.file:hover {
+          background: var(--se-hover);
         }
 
         .name {
           display: flex;
           align-items: center;
-          gap: 10px;
+          gap: 12px;
           min-width: 0;
         }
 
         .icon {
-          width: 42px;
+          width: 48px;
+          min-width: 48px;
+          height: 24px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--primary-color) 10%, transparent);
           text-align: center;
-          color: var(--secondary-text-color);
-          font-size: 12px;
+          color: var(--se-muted);
+          font-size: 11px;
+          font-weight: 700;
         }
 
         tr.file {
           cursor: pointer;
-        }
-
-        tr.file:hover {
-          background: rgba(3, 169, 244, 0.05);
         }
 
         .preview-backdrop {
@@ -338,9 +384,10 @@ class SambaExplorerPanel extends HTMLElement {
           display: flex;
           flex-direction: column;
           overflow: hidden;
-          border-radius: 6px;
-          background: var(--card-background-color);
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+          border: 1px solid var(--se-border);
+          border-radius: 8px;
+          background: var(--se-surface);
+          box-shadow: 0 18px 48px rgba(0, 0, 0, 0.42);
         }
 
         .preview-header {
@@ -348,8 +395,8 @@ class SambaExplorerPanel extends HTMLElement {
           align-items: center;
           justify-content: space-between;
           gap: 12px;
-          padding: 12px 16px;
-          border-bottom: 1px solid var(--divider-color);
+          padding: 14px 16px;
+          border-bottom: 1px solid var(--se-border);
         }
 
         .preview-title {
@@ -357,7 +404,7 @@ class SambaExplorerPanel extends HTMLElement {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          font-weight: 500;
+          font-weight: 650;
         }
 
         .preview-actions {
@@ -398,7 +445,7 @@ class SambaExplorerPanel extends HTMLElement {
 
         @media (max-width: 720px) {
           .page {
-            padding: 16px;
+            padding: ${this.cardMode ? "12px" : "16px"};
           }
 
           .toolbar {
@@ -418,7 +465,7 @@ class SambaExplorerPanel extends HTMLElement {
           }
 
           button {
-            min-width: 72px;
+            min-width: 46px;
             padding: 0 10px;
           }
 
@@ -457,8 +504,8 @@ class SambaExplorerPanel extends HTMLElement {
                     : '<option>No SMB connection</option>'
                 }
               </select>
-              <button id="up-button" ${this.path === "/" || this.loading ? "disabled" : ""}>Up</button>
-              <button id="refresh-button" ${this.loading || !hasEntries ? "disabled" : ""}>Refresh</button>
+              <button id="up-button" title="Up" aria-label="Up" ${this.path === "/" || this.loading ? "disabled" : ""}>Up</button>
+              <button id="refresh-button" title="Refresh" aria-label="Refresh" ${this.loading || !hasEntries ? "disabled" : ""}>Reload</button>
             </div>
           </div>
 
