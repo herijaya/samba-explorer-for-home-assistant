@@ -370,16 +370,25 @@ class SambaExplorerPanel extends HTMLElement {
             padding: 16px;
           }
 
-          .toolbar,
-          .actions {
+          .toolbar {
             align-items: stretch;
             flex-direction: column;
           }
 
-          .actions,
-          select,
-          button {
+          .actions {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
             width: 100%;
+          }
+
+          select {
+            min-width: 0;
+            width: 100%;
+          }
+
+          button {
+            min-width: 72px;
+            padding: 0 10px;
           }
 
           th:nth-child(2),
