@@ -32,14 +32,13 @@ class SambaExplorerPanel extends HTMLElement {
 
     try {
       const response = await this._hass.callWS({
-        type: "config_entries/get_entries",
-        domain: "samba_explorer",
+        type: "samba_explorer/list_entries",
       });
       this.entries = response || [];
       this.entryId = this.entries[0]?.entry_id || "";
       await this.loadDirectory("/");
     } catch (err) {
-      this.error = err?.message || "Unable to load Samba Explorer entries.";
+      this.error = err?.message || "Unable to load Samba Explorer connections.";
       this.loading = false;
       this.render();
     }
@@ -275,7 +274,7 @@ class SambaExplorerPanel extends HTMLElement {
         <div class="path">${this.path}</div>
 
         ${this.error ? `<div class="message error">${this.error}</div>` : ""}
-        ${!hasEntries && !this.loading ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
+        ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
         ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
       </div>
     `;

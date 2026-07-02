@@ -16,4 +16,4 @@ PANEL_ICON = "mdi:folder-network"
 PANEL_TITLE = "Samba Explorer"
 
 WS_LIST_DIRECTORY = "samba_explorer/list_directory"
-
+WS_LIST_ENTRIES = "samba_explorer/list_entries"

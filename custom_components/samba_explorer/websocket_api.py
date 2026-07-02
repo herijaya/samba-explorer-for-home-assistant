@@ -7,14 +7,39 @@ import voluptuous as vol
 from homeassistant.components import websocket_api
 from homeassistant.core import HomeAssistant, callback
 
-from .const import DOMAIN, WS_LIST_DIRECTORY
+from .const import DOMAIN, CONF_HOST, CONF_SHARE, WS_LIST_DIRECTORY, WS_LIST_ENTRIES
 from .smb_client import SambaExplorerClient, SmbEntryConfig
 
 
 @callback
 def async_register_websocket_api(hass: HomeAssistant) -> None:
     """Register Samba Explorer websocket commands."""
+    websocket_api.async_register_command(hass, websocket_list_entries)
     websocket_api.async_register_command(hass, websocket_list_directory)
+
+
+@websocket_api.websocket_command(
+    {
+        vol.Required("type"): WS_LIST_ENTRIES,
+    }
+)
+@websocket_api.async_response
+async def websocket_list_entries(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+    msg: dict,
+) -> None:
+    """Return configured Samba Explorer entries for the panel."""
+    entries = [
+        {
+            "entry_id": entry.entry_id,
+            "title": entry.title,
+            "host": entry.data.get(CONF_HOST, ""),
+            "share": entry.data.get(CONF_SHARE, ""),
+        }
+        for entry in hass.config_entries.async_entries(DOMAIN)
+    ]
+    connection.send_result(msg["id"], entries)
 
 
 @websocket_api.websocket_command(
@@ -52,4 +77,3 @@ async def websocket_list_directory(
             "items": items,
         },
     )
-
