@@ -11,6 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
 
 from .const import DOMAIN, PANEL_ICON, PANEL_TITLE, PANEL_URL
+from .http import SambaExplorerFileView
 from .websocket_api import async_register_websocket_api
 
 PANEL_STATIC_URL = "/samba_explorer_static"
@@ -21,6 +22,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up Samba Explorer."""
     hass.data.setdefault(DOMAIN, {})
     async_register_websocket_api(hass)
+    hass.http.register_view(SambaExplorerFileView())
     return True
 
 

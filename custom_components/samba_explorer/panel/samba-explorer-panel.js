@@ -9,6 +9,9 @@ class SambaExplorerPanel extends HTMLElement {
     this.loading = false;
     this.error = "";
     this.loadedEntries = false;
+    this.previewItem = null;
+    this.previewUrl = "";
+    this.previewError = "";
   }
 
   set hass(hass) {
@@ -93,6 +96,59 @@ class SambaExplorerPanel extends HTMLElement {
   formatDate(timestamp) {
     if (!timestamp) return "";
     return new Date(timestamp * 1000).toLocaleString();
+  }
+
+  escapeHtml(value) {
+    return String(value)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  fileKind(name) {
+    const ext = name.split(".").pop().toLowerCase();
+    if (["jpg", "jpeg", "png", "gif", "webp", "bmp", "svg"].includes(ext)) return "image";
+    if (["mp4", "webm", "ogg", "ogv", "mov", "m4v", "mkv"].includes(ext)) return "video";
+    if (["mp3", "wav", "flac", "m4a", "aac", "oga", "opus"].includes(ext)) return "audio";
+    if (ext === "pdf") return "pdf";
+    if (["txt", "log", "csv", "json", "yaml", "yml", "md", "xml"].includes(ext)) return "text";
+    return "file";
+  }
+
+  async signedFileUrl(item, download = false) {
+    const path = `/api/samba_explorer/file/${encodeURIComponent(this.entryId)}?path=${encodeURIComponent(item.path)}${
+      download ? "&download=1" : ""
+    }`;
+    const response = await this._hass.callWS({
+      type: "auth/sign_path",
+      path,
+    });
+    return response.path || response;
+  }
+
+  async openPreview(item) {
+    if (item.is_dir) return;
+
+    this.previewItem = item;
+    this.previewUrl = "";
+    this.previewError = "";
+    this.render();
+
+    try {
+      this.previewUrl = await this.signedFileUrl(item);
+    } catch (err) {
+      this.previewError = err?.message || "Unable to open this file.";
+    }
+    this.render();
+  }
+
+  closePreview() {
+    this.previewItem = null;
+    this.previewUrl = "";
+    this.previewError = "";
+    this.render();
   }
 
   render() {
@@ -220,8 +276,93 @@ class SambaExplorerPanel extends HTMLElement {
         }
 
         .icon {
-          width: 22px;
+          width: 42px;
           text-align: center;
+          color: var(--secondary-text-color);
+          font-size: 12px;
+        }
+
+        tr.file {
+          cursor: pointer;
+        }
+
+        tr.file:hover {
+          background: rgba(3, 169, 244, 0.05);
+        }
+
+        .preview-backdrop {
+          position: fixed;
+          inset: 0;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 24px;
+          background: rgba(0, 0, 0, 0.62);
+        }
+
+        .preview {
+          width: min(1100px, 100%);
+          max-height: calc(100vh - 48px);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          border-radius: 6px;
+          background: var(--card-background-color);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .preview-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 12px 16px;
+          border-bottom: 1px solid var(--divider-color);
+        }
+
+        .preview-title {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-weight: 500;
+        }
+
+        .preview-actions {
+          display: flex;
+          gap: 8px;
+        }
+
+        .preview-body {
+          min-height: 240px;
+          max-height: calc(100vh - 130px);
+          overflow: auto;
+          padding: 16px;
+          background: var(--primary-background-color);
+        }
+
+        .preview-body img,
+        .preview-body video {
+          display: block;
+          max-width: 100%;
+          max-height: calc(100vh - 180px);
+          margin: 0 auto;
+        }
+
+        .preview-body audio {
+          width: 100%;
+        }
+
+        .preview-body iframe {
+          width: 100%;
+          height: calc(100vh - 180px);
+          border: 0;
+          background: white;
+        }
+
+        .preview-note {
+          color: var(--secondary-text-color);
         }
 
         @media (max-width: 720px) {
@@ -245,6 +386,15 @@ class SambaExplorerPanel extends HTMLElement {
           td:nth-child(2) {
             display: none;
           }
+
+          .preview-backdrop {
+            align-items: stretch;
+            padding: 8px;
+          }
+
+          .preview-body {
+            max-height: calc(100vh - 100px);
+          }
         }
       </style>
 
@@ -260,7 +410,7 @@ class SambaExplorerPanel extends HTMLElement {
                         (entry) =>
                           `<option value="${entry.entry_id}" ${
                             entry.entry_id === this.entryId ? "selected" : ""
-                          }>${entry.title}</option>`
+                          }>${this.escapeHtml(entry.title)}</option>`
                       )
                       .join("")
                   : '<option>No SMB connection</option>'
@@ -276,6 +426,7 @@ class SambaExplorerPanel extends HTMLElement {
         ${this.error ? `<div class="message error">${this.error}</div>` : ""}
         ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
         ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
+        ${this.renderPreview()}
       </div>
     `;
 
@@ -287,6 +438,15 @@ class SambaExplorerPanel extends HTMLElement {
     this.shadowRoot.getElementById("refresh-button")?.addEventListener("click", () => this.loadDirectory(this.path));
     this.shadowRoot.querySelectorAll("tr.folder").forEach((row) => {
       row.addEventListener("click", () => this.loadDirectory(row.dataset.path));
+    });
+    this.shadowRoot.querySelectorAll("tr.file").forEach((row) => {
+      const item = this.items.find((candidate) => candidate.path === row.dataset.path);
+      row.addEventListener("click", () => item && this.openPreview(item));
+    });
+    this.shadowRoot.getElementById("close-preview")?.addEventListener("click", () => this.closePreview());
+    this.shadowRoot.getElementById("download-preview")?.addEventListener("click", async () => {
+      if (!this.previewItem) return;
+      window.open(await this.signedFileUrl(this.previewItem, true), "_blank", "noopener");
     });
   }
 
@@ -307,11 +467,11 @@ class SambaExplorerPanel extends HTMLElement {
           ${this.items
             .map(
               (item) => `
-                <tr class="${item.is_dir ? "folder" : ""}" data-path="${item.path}">
+                <tr class="${item.is_dir ? "folder" : "file"}" data-path="${item.path}">
                   <td>
                     <div class="name">
-                      <span class="icon">${item.is_dir ? "DIR" : "FILE"}</span>
-                      <span>${item.name}</span>
+                      <span class="icon">${item.is_dir ? "DIR" : this.fileKind(item.name).toUpperCase()}</span>
+                      <span>${this.escapeHtml(item.name)}</span>
                     </div>
                   </td>
                   <td>${this.formatDate(item.modified)}</td>
@@ -322,6 +482,53 @@ class SambaExplorerPanel extends HTMLElement {
             .join("")}
         </tbody>
       </table>
+    `;
+  }
+
+  renderPreview() {
+    if (!this.previewItem) return "";
+    const kind = this.fileKind(this.previewItem.name);
+    const body = this.previewBody(kind);
+
+    return `
+      <div class="preview-backdrop">
+        <div class="preview">
+          <div class="preview-header">
+            <div class="preview-title">${this.escapeHtml(this.previewItem.name)}</div>
+            <div class="preview-actions">
+              <button id="download-preview">Download</button>
+              <button id="close-preview">Close</button>
+            </div>
+          </div>
+          <div class="preview-body">
+            ${this.previewError ? `<div class="message error">${this.previewError}</div>` : body}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  previewBody(kind) {
+    if (!this.previewUrl) return `<div class="message">Opening file...</div>`;
+
+    if (kind === "image") {
+      return `<img src="${this.previewUrl}" alt="${this.escapeHtml(this.previewItem.name)}">`;
+    }
+    if (kind === "video") {
+      return `<video src="${this.previewUrl}" controls autoplay playsinline></video>`;
+    }
+    if (kind === "audio") {
+      return `<audio src="${this.previewUrl}" controls autoplay></audio>`;
+    }
+    if (kind === "pdf" || kind === "text") {
+      return `<iframe src="${this.previewUrl}"></iframe>`;
+    }
+
+    return `
+      <div class="message">
+        <div>This file type cannot be previewed yet.</div>
+        <div class="preview-note">Use Download to open it outside Home Assistant.</div>
+      </div>
     `;
   }
 }

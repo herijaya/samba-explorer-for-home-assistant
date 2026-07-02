@@ -23,11 +23,13 @@ Available now:
 - SMB connection test during setup.
 - WebSocket API for listing folders and files.
 - Sidebar panel for browsing configured SMB shares.
+- Basic preview for images, video, audio, PDF, and text files.
+- File download from the preview dialog.
 
 Planned next:
 
-- Download, upload, rename, delete, copy, and move operations.
-- File preview.
+- Upload, rename, delete, copy, and move operations.
+- Range-based streaming for large video files.
 - Search.
 - Favorites.
 - Multi-server UX improvements.
@@ -211,10 +213,10 @@ Credential storage should use Home Assistant config entries or secure storage pa
 - [x] List folders and files from a remote share.
 - [x] Add sidebar panel.
 - [x] Add folder navigation.
-- [ ] Add file download.
+- [x] Add basic file preview.
+- [x] Add file download.
 - [ ] Add upload support.
 - [ ] Add rename, delete, copy, move, and create folder operations.
-- [ ] Add preview support.
 - [ ] Add search.
 - [ ] Add favorites.
 - [ ] Add multi-server support.

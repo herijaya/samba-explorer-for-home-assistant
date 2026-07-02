@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import PurePosixPath
 from socket import gethostname
 from typing import Any
@@ -76,6 +77,17 @@ class SambaExplorerClient:
                 )
 
             return sorted(result, key=lambda row: (not row["is_dir"], row["name"].lower()))
+        finally:
+            conn.close()
+
+    def read_file(self, path: str) -> bytes:
+        """Read a file from the configured share."""
+        conn = self._connect()
+        try:
+            normalized_path = self._safe_path(path)
+            output = BytesIO()
+            conn.retrieveFile(self._config.share, normalized_path, output)
+            return output.getvalue()
         finally:
             conn.close()
 
