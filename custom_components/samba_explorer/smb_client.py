@@ -76,7 +76,7 @@ class SambaExplorerClient:
                     }
                 )
 
-            return sorted(result, key=lambda row: (not row["is_dir"], row["name"].lower()))
+            return sorted(result, key=lambda row: (-row["modified"], row["name"].lower()))
         finally:
             conn.close()
 

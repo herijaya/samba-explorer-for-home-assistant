@@ -23,6 +23,7 @@ Available now:
 - SMB connection test during setup.
 - WebSocket API for listing folders and files.
 - Sidebar panel for browsing configured SMB shares.
+- Newest files are shown first.
 - Basic preview for images, video, audio, PDF, and text files.
 - File download from the preview dialog.
 - Range-based video/audio preview to avoid loading large files all at once.
