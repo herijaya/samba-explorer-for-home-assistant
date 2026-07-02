@@ -45,6 +45,26 @@ def _schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
     )
 
 
+def _options_schema(defaults: dict[str, Any] | None = None) -> vol.Schema:
+    defaults = defaults or {}
+    return vol.Schema(
+        {
+            vol.Required(CONF_NAME, default=defaults.get(CONF_NAME, DEFAULT_NAME)): str,
+            vol.Required(CONF_HOST, default=defaults.get(CONF_HOST, "")): str,
+            vol.Required(CONF_SHARE, default=defaults.get(CONF_SHARE, "")): str,
+            vol.Required(CONF_USERNAME, default=defaults.get(CONF_USERNAME, "")): str,
+            vol.Optional(CONF_PASSWORD, default=""): str,
+            vol.Optional(CONF_DOMAIN, default=defaults.get(CONF_DOMAIN, DEFAULT_DOMAIN)): str,
+            vol.Optional(CONF_BASE_PATH, default=defaults.get(CONF_BASE_PATH, DEFAULT_BASE_PATH)): str,
+            vol.Optional(CONF_PORT, default=defaults.get(CONF_PORT, DEFAULT_SMB_PORT)): int,
+            vol.Optional(
+                CONF_PANEL_ADMIN_ONLY,
+                default=defaults.get(CONF_PANEL_ADMIN_ONLY, DEFAULT_PANEL_ADMIN_ONLY),
+            ): bool,
+        }
+    )
+
+
 async def _validate_input(hass: HomeAssistant, data: dict[str, Any]) -> None:
     config = SmbEntryConfig.from_mapping(data)
     client = SambaExplorerClient(config)
@@ -101,6 +121,8 @@ class SambaExplorerOptionsFlow(config_entries.OptionsFlow):
 
         if user_input is not None:
             updated_data = {**defaults, **user_input}
+            if not user_input.get(CONF_PASSWORD):
+                updated_data[CONF_PASSWORD] = defaults.get(CONF_PASSWORD, "")
 
             try:
                 await _validate_input(self.hass, updated_data)
@@ -112,11 +134,10 @@ class SambaExplorerOptionsFlow(config_entries.OptionsFlow):
                     title=_entry_title(updated_data),
                     data=updated_data,
                 )
-                await self.hass.config_entries.async_reload(self.config_entry.entry_id)
                 return self.async_create_entry(title="", data={})
 
         return self.async_show_form(
             step_id="init",
-            data_schema=_schema(user_input or defaults),
+            data_schema=_options_schema(user_input or defaults),
             errors=errors,
         )

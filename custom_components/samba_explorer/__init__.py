@@ -37,6 +37,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Samba Explorer from a config entry."""
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = entry.data
+    entry.async_on_unload(entry.add_update_listener(_async_update_listener))
     await _async_register_panel(hass)
     return True
 
@@ -92,3 +93,9 @@ def _panel_require_admin(hass: HomeAssistant) -> bool:
         entry.data.get(CONF_PANEL_ADMIN_ONLY, DEFAULT_PANEL_ADMIN_ONLY)
         for entry in entries
     )
+
+
+async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Handle updates from the options flow."""
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = entry.data
+    await _async_register_panel(hass)
