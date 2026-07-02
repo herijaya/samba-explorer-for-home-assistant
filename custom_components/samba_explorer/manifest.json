@@ -8,5 +8,5 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/herijaya/samba-explorer-for-home-assistant/issues",
   "requirements": ["pysmb==1.2.10"],
-  "version": "0.1.0"
+  "version": "0.1.1"
 }
