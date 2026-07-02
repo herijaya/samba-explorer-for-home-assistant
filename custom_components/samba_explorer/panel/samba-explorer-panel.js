@@ -556,9 +556,8 @@ class SambaExplorerPanel extends HTMLElement {
 
           ${this.error ? `<div class="message error">${this.error}</div>` : ""}
           ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
-          ${this.renderPager("top")}
           ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
-          ${this.renderPager("bottom")}
+          ${this.renderPager()}
           ${this.renderPreview()}
         </div>
       ${outerEnd}
@@ -633,13 +632,13 @@ class SambaExplorerPanel extends HTMLElement {
     `;
   }
 
-  renderPager(position) {
+  renderPager() {
     if (this.loading || this.items.length <= this.pageSize) return "";
 
     const start = this.page * this.pageSize + 1;
     const end = Math.min((this.page + 1) * this.pageSize, this.items.length);
     return `
-      <div class="pager pager-${position}">
+      <div class="pager">
         <div>Showing ${start}-${end} of ${this.items.length}</div>
         <div class="pager-actions">
           <button data-page-action="prev" ${this.page === 0 ? "disabled" : ""}>Prev</button>
