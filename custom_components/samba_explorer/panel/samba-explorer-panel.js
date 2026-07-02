@@ -6,6 +6,8 @@ class SambaExplorerPanel extends HTMLElement {
     this.entryId = "";
     this.path = "/";
     this.items = [];
+    this.page = 0;
+    this.pageSize = 50;
     this.loading = false;
     this.error = "";
     this.loadedEntries = false;
@@ -75,6 +77,7 @@ class SambaExplorerPanel extends HTMLElement {
       });
       this.path = response.path || path;
       this.items = response.items || [];
+      this.page = 0;
     } catch (err) {
       this.error = err?.message || "Unable to list this folder.";
     } finally {
@@ -178,6 +181,20 @@ class SambaExplorerPanel extends HTMLElement {
 
   title() {
     return this.config.title || "Samba Explorer";
+  }
+
+  totalPages() {
+    return Math.max(Math.ceil(this.items.length / this.pageSize), 1);
+  }
+
+  currentPageItems() {
+    const start = this.page * this.pageSize;
+    return this.items.slice(start, start + this.pageSize);
+  }
+
+  setPage(page) {
+    this.page = Math.max(0, Math.min(page, this.totalPages() - 1));
+    this.render();
   }
 
   render() {
@@ -284,6 +301,21 @@ class SambaExplorerPanel extends HTMLElement {
           font-family: monospace;
           font-size: 13px;
           overflow-wrap: anywhere;
+        }
+
+        .pager {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 12px;
+          color: var(--se-muted);
+          font-size: 13px;
+        }
+
+        .pager-actions {
+          display: flex;
+          gap: 8px;
         }
 
         .message {
@@ -469,6 +501,17 @@ class SambaExplorerPanel extends HTMLElement {
             padding: 0 10px;
           }
 
+          .pager {
+            align-items: stretch;
+            flex-direction: column;
+            gap: 8px;
+          }
+
+          .pager-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+          }
+
           th:nth-child(2),
           td:nth-child(2) {
             display: none;
@@ -513,6 +556,7 @@ class SambaExplorerPanel extends HTMLElement {
 
           ${this.error ? `<div class="message error">${this.error}</div>` : ""}
           ${!hasEntries && !this.loading && !this.error ? `<div class="message">Add an SMB connection from Settings &gt; Devices &amp; services.</div>` : ""}
+          ${this.renderPager()}
           ${this.loading ? `<div class="message">Loading...</div>` : this.renderTable()}
           ${this.renderPreview()}
         </div>
@@ -525,6 +569,8 @@ class SambaExplorerPanel extends HTMLElement {
     });
     this.shadowRoot.getElementById("up-button")?.addEventListener("click", () => this.loadDirectory(this.parentPath()));
     this.shadowRoot.getElementById("refresh-button")?.addEventListener("click", () => this.loadDirectory(this.path));
+    this.shadowRoot.getElementById("prev-page")?.addEventListener("click", () => this.setPage(this.page - 1));
+    this.shadowRoot.getElementById("next-page")?.addEventListener("click", () => this.setPage(this.page + 1));
     this.shadowRoot.querySelectorAll("tr.folder").forEach((row) => {
       row.addEventListener("click", () => this.loadDirectory(row.dataset.path));
     });
@@ -549,6 +595,7 @@ class SambaExplorerPanel extends HTMLElement {
   renderTable() {
     if (!this.entries.length) return "";
     if (!this.items.length) return `<div class="message">This folder is empty.</div>`;
+    const rows = this.currentPageItems();
 
     return `
       <table>
@@ -560,7 +607,7 @@ class SambaExplorerPanel extends HTMLElement {
           </tr>
         </thead>
         <tbody>
-          ${this.items
+          ${rows
             .map(
               (item) => `
                 <tr class="${item.is_dir ? "folder" : "file"}" data-path="${item.path}">
@@ -578,6 +625,22 @@ class SambaExplorerPanel extends HTMLElement {
             .join("")}
         </tbody>
       </table>
+    `;
+  }
+
+  renderPager() {
+    if (this.loading || this.items.length <= this.pageSize) return "";
+
+    const start = this.page * this.pageSize + 1;
+    const end = Math.min((this.page + 1) * this.pageSize, this.items.length);
+    return `
+      <div class="pager">
+        <div>Showing ${start}-${end} of ${this.items.length}</div>
+        <div class="pager-actions">
+          <button id="prev-page" ${this.page === 0 ? "disabled" : ""}>Prev</button>
+          <button id="next-page" ${this.page >= this.totalPages() - 1 ? "disabled" : ""}>Next</button>
+        </div>
+      </div>
     `;
   }
 

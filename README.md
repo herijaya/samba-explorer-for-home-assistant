@@ -13,7 +13,7 @@ Browse, search, preview, upload, download, and manage files from remote SMB/Samb
 
 This project is in early development.
 
-Current version: `0.1.8`
+Current version: `0.1.9`
 
 Available now:
 
@@ -26,6 +26,7 @@ Available now:
 - Configurable sidebar access: admin-only or all logged-in users.
 - Lovelace custom card for dashboard-based placement.
 - Newest files are shown first.
+- Directory views show 50 items per page with Prev/Next navigation.
 - Basic preview for images, video, audio, PDF, and text files.
 - File download from the preview dialog.
 - Range-based video/audio preview to avoid loading large files all at once.
